@@ -334,7 +334,10 @@ apply_custom_style()
 # =========================================================
 BASE_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = BASE_DIR.parent
-DATA_DB_PATH = PROJECT_ROOT / "股市資料庫" / "data" / "data.db"
+LOCAL_DB_PATH = PROJECT_ROOT / "股市資料庫" / "data" / "data.db"
+DEMO_DB_PATH = PROJECT_ROOT / "demo" / "demo_data.db"
+DATA_DB_PATH = LOCAL_DB_PATH if LOCAL_DB_PATH.exists() else DEMO_DB_PATH
+IS_DEMO_MODE = DATA_DB_PATH == DEMO_DB_PATH
 
 SCRIPT_1 = PROJECT_ROOT / "1計算多空指標" / "calculate_price_indicators.py"
 SCRIPT_2 = PROJECT_ROOT / "2股價預測" / "train_price_prediction.py"
@@ -1290,6 +1293,9 @@ if not stock_list_df.empty and "stock_id" in stock_list_df.columns and "股票�
             globals()[dataframe_name] = dataframe.merge(name_map, on="stock_id", how="left")
 
 catalog_df = build_stock_catalog(stock_list_df, screener_df, market_df)
+if IS_DEMO_MODE and not stock_list_df.empty and "stock_id" in stock_list_df.columns:
+    demo_stock_ids = set(stock_list_df["stock_id"].astype(str))
+    catalog_df = catalog_df[catalog_df["stock_id"].astype(str).isin(demo_stock_ids)].reset_index(drop=True)
 
 
 # =========================================================
@@ -1462,6 +1468,9 @@ elif page == "資料檢查":
 elif page == "流程執行":
     st.title("⚙️ 流程執行")
     st.info("可一鍵依序執行子專案 1、2、3，也保留原本的單獨執行按鈕。")
+    if IS_DEMO_MODE:
+        st.warning("目前為公開 Demo 模式，為避免雲端重新訓練與覆寫資料，流程執行功能已停用。其他分析與圖表功能可正常操作。")
+        st.stop()
 
     if st.button("▶ 一鍵執行完整流程（1 → 2 → 3）", use_container_width=True, type="primary"):
         results = []

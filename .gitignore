@@ -67,3 +67,7 @@ Untitled
 
 # Misplaced archive package
 00專案文件:成果截圖.zip
+
+# Public Streamlit demo database
+!demo/
+!demo/demo_data.db
