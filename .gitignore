@@ -1,0 +1,69 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# macOS / editor
+.DS_Store
+.vscode/
+.idea/
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+.streamlit/secrets.toml
+
+# Databases and backups
+*.db
+*.sqlite
+*.sqlite3
+*backup*.db
+*備份*.db
+
+# Trained models
+*.pkl
+*.joblib
+
+# Logs and temporary files
+logs/
+*.log
+*.tmp
+Untitled
+
+# Runtime analysis history
+4生成戰略儀表板/output/analysis_history/
+4生成戰略儀表板/analysis_history.db
+
+# Historical / failed versions
+99歷史版本/
+*失敗版*
+*.bak*
+*_before_*
+*_working.py
+
+# Local generated status files
+專案檔案清單.txt
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Optional large raw data
+股市資料庫/data/
+
+# Local helper scripts
+整理專案資料夾.py
+修正GitHub上傳清單.py
+
+# Extra dashboard backups
+4生成戰略儀表板/app_integrated_final_*.py
+
+# Misplaced archive package
+00專案文件:成果截圖.zip

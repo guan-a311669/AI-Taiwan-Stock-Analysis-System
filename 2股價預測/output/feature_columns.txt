@@ -1,0 +1,3 @@
+ma5
+ma20
+signal_num
