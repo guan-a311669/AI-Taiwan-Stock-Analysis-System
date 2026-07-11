@@ -375,7 +375,11 @@ SCREENER_CSV = (
     / "simple_stock_screener_results.csv"
 )
 
-HISTORY_ROOT = BASE_DIR / "output" / "analysis_history"
+HISTORY_ROOT = (
+    Path("/tmp/ai_stock_analysis_history")
+    if IS_DEMO_MODE
+    else BASE_DIR / "output" / "analysis_history"
+)
 
 
 # =========================================================
@@ -436,6 +440,12 @@ def read_csv_safe(path: Path) -> pd.DataFrame:
     return pd.DataFrame()
 
 
+def open_sqlite_readonly(path: Path):
+    resolved = path.resolve()
+    uri = f"file:{resolved.as_posix()}?mode=ro&immutable=1"
+    return sqlite3.connect(uri, uri=True)
+
+
 @st.cache_data(show_spinner=False)
 def load_stock_list(db_path: str) -> pd.DataFrame:
     path = Path(db_path)
@@ -443,7 +453,7 @@ def load_stock_list(db_path: str) -> pd.DataFrame:
         return pd.DataFrame()
 
     try:
-        with sqlite3.connect(path) as conn:
+        with open_sqlite_readonly(path) as conn:
             df = pd.read_sql("SELECT * FROM stockList", conn)
         return prepare_dataframe(df)
     except Exception:
@@ -460,7 +470,7 @@ def load_stock_price(db_path: str, stock_id: str) -> pd.DataFrame:
     sid_number = sid.lstrip("0") or "0"
 
     try:
-        with sqlite3.connect(path) as conn:
+        with open_sqlite_readonly(path) as conn:
             query = """
                 SELECT *
                 FROM price
@@ -1278,6 +1288,11 @@ prediction_df = read_csv_safe(PREDICTION_CSV)
 prediction_history_df = read_csv_safe(PREDICTION_HISTORY_CSV)
 feature_importance_df = read_csv_safe(FEATURE_IMPORTANCE_CSV)
 screener_df = read_csv_safe(SCREENER_CSV)
+if not DATA_DB_PATH.exists():
+    st.error(f"找不到 Demo 資料庫：{DATA_DB_PATH}")
+    st.info("請確認 GitHub 中存在 demo/demo_data.db。")
+    st.stop()
+
 stock_list_df = load_stock_list(str(DATA_DB_PATH))
 
 # 股票名稱補齊
