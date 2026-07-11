@@ -1,4 +1,9 @@
-# AI 奇摩股價預測與戰略分析系統
+## 線上體驗
+
+- [開啟 Streamlit 線上 Demo](https://ai-taiwan-stock-analysis.streamlit.app)
+- [查看 GitHub 原始碼](https://github.com/guan-a311669/AI-Taiwan-Stock-Analysis-System)
+
+> 公開 Demo 提供約 40 檔股票的分析資料，完整本機版本保留更多歷史資料與功能。# AI 奇摩股價預測與戰略分析系統
 
 ## 專案簡介
 
